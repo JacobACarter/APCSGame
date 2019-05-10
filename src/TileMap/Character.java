@@ -102,19 +102,34 @@ public class Character {
         }
     }
     
+    public void update(Character protag){
+        x += dx;
+        y += dy;
+        hurt.updatePos(dx, dy);
+        hit.updatePos(dx, dy);
+        hitCollision(protag);
+    }
+    
     public void hitCollision(Character check){
         if(hurt.checkCollision(check.getHit())){
             state.setState(CharacterState.HIT);
         }
     }
     
+    public void setHit(CollisionBox hit){
+        this.hit = hit;
+    }
+    
     public void draw(Graphics2D g){
+        if(getState() == CharacterState.HURT){
+            g.drawImage(imagesIdle.get(0), (int)x, (int)y, null);
+        }
         if(getState() == CharacterState.IDLE){
             g.drawImage(imagesIdle.get(((int)animationCounterIdle)%imagesIdle.size()), (int)x, (int)y, null);
             animationCounterIdle += (1.0/20.0);
         }
         else{
-            g.drawImage(imagesIdle.get(0), (int)x, (int)y, null);
+            g.drawImage(imagesIdle.get(1), (int)x, (int)y, null);
         }
         
     }
