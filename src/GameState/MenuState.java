@@ -21,7 +21,7 @@ public class MenuState extends GameState{
     private Color titleColor;
     private Font titleFont;
     private Font font;
-    private final String GAMENAME = "killer6000";
+    private final String GAMENAME = "Placeholder";
     
     public MenuState(GameStateManager gsm){
         this.gsm = gsm;

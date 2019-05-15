@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
+
 /**
  *
  * @author Jacob
@@ -127,6 +128,10 @@ public class Character {
         hurt.updatePos(dx, dy);
         hit.updatePos(dx, dy);
         hitCollision(protag);
+    }
+    
+    public void update(KnightBoss boss){
+        
     }
     
     public void hitCollision(Character check){
