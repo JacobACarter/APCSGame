@@ -8,9 +8,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import TileMap.Character;
 import TileMap.CollisionBox;
+import TileMap.KnightBoss;
 
-
-public class FirstRoom extends GameState{
+public class BossRoom extends GameState {
     
     private int animationCounter = 0;
     private Background bg;
@@ -19,48 +19,40 @@ public class FirstRoom extends GameState{
     double verticalVectorC = 0;
     double directionVectorC = 3;
     private Character mainC;
-    private ArrayList<Character> enemies = new ArrayList<>();
+    private KnightBoss boss;
+    
     private String[] characterFrames = {"/Characters/Main/IdleFrame1.png", "/Characters/Main/IdleFrame2.png"};
-    private String[] enemyTypeOneFrames = {"/Characters/enemyidle.png"};
     private CollisionBox floor;
     private int swordTimer;
     
-    public FirstRoom(GameStateManager gsm){
+    public BossRoom(GameStateManager gsm){
         this.gsm = gsm;
         try{
             bg = new Background("/Background/firstroom.jpg", 1, 1200, 801);
             bg.setVector(0,0);
-            mainC = new Character(characterFrames, 1, new CollisionBox(6, 13,50,100), new CollisionBox(0, 0, 50, 100));
-            enemies.add(new Character(enemyTypeOneFrames, 1, new CollisionBox(20,20,100,100), new CollisionBox(6,14,100,100)));
-            floor = new CollisionBox(600,100, 0,150);
-           
+            mainC = new Character(characterFrames, 1, new CollisionBox(6, 13,50, 250), new CollisionBox(0, 0, 50, 100));
+            floor = new CollisionBox(600, 50, 0, 250);
         }
         catch(Exception e){
             e.printStackTrace();
         }
     }
     
-    
     @Override
     public void init(){
         bg.setPosition(0,0);
         mainC.setPosition(50, 100);
         mainC.setState(CharacterState.JUMP);
-        enemies.get(0).setPosition(100, floor.getYPos());
+        
     }
     
     @Override
     public void update(){
         
+
         mainC.setVector(horizontalVectorC, verticalVectorC);
-        mainC.update(enemies);
-        for(Character e: enemies){
-            enemyAI(e);
-            e.update(mainC);
-            if(e.getState() == CharacterState.HIT)
-                e.setPosition(-10, -30);
-                e.setState(CharacterState.IDLE);
-        }
+        mainC.update();
+        
         if(mainC.getState() == CharacterState.HIT){
             gsm.setState(3);
         }       
@@ -80,7 +72,7 @@ public class FirstRoom extends GameState{
                 mainC.setState(CharacterState.IDLE);
             }
         }
-        if (mainC.getXPos() > 560) {
+        if (mainC.getXPos() > 1200) {
             gsm.setState(2);
         }
     }
@@ -91,9 +83,7 @@ public class FirstRoom extends GameState{
     public void draw(Graphics2D g){
         bg.draw(g);
         mainC.draw(g);
-        for(Character e: enemies){
-            e.draw(g);
-        }
+        
     }
     private ArrayList<Integer> keyList = new ArrayList<>();
     @Override
@@ -119,9 +109,6 @@ public class FirstRoom extends GameState{
             mainC.setHit(new CollisionBox(6, 13, mainC.getXPos() + directionVectorC + 3, mainC.getYPos()));
             swordTimer = 0;
         }
-//        if (keyList.indexOf(KeyEvent.VK_S) != -1){
-//            verticalVectorC = 1;
-//        }
     }
     
     @Override
@@ -131,9 +118,5 @@ public class FirstRoom extends GameState{
         if (keyList.indexOf(KeyEvent.VK_A) == -1 && keyList.indexOf(KeyEvent.VK_D) == -1){
             horizontalVectorC = 0;
         }
-    }
-    
-    public void enemyAI(Character badGuy){
-        badGuy.setVector((mainC.getXPos() - badGuy.getXPos()) / 100, 0);
     }
 }
