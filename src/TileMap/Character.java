@@ -5,6 +5,8 @@
  */
 package TileMap;
 
+import CharacterInfo.CharacterInfo;
+import CharacterInfo.MainCharacterInfo;
 import GameState.State;
 import GameState.State.CharacterState;
 import Main.GamePanel;
@@ -20,27 +22,43 @@ import javax.imageio.ImageIO;
  */
 public class Character {
     private ArrayList<BufferedImage> imagesIdle = new ArrayList<>();
+    private ArrayList<BufferedImage> imagesRun = new ArrayList<>();
+    private ArrayList<BufferedImage> imagesJump= new ArrayList<>();
+    private ArrayList<BufferedImage> imagesAttack = new ArrayList<>();
     private double animationCounterIdle = 0;
+    private double animationCounterRun = 0;
+    private double animationCounterJump = 0;
+    private double animationCounterAttack = 0;
     private double x;
     private double y;
     private double dx;
     private double dy;
     private CollisionBox hurt;
     private CollisionBox hit;
+    private CollisionBox attackHitBox;
     private State state;
     
     private double moveScale;
     
-    public Character(String[] s, double ms, CollisionBox hurt, CollisionBox hit){
+    public Character(CharacterInfo info){
         
         try{
-            for(String file : s){
+            for(String file : info.getIdleFrames()){
                 imagesIdle.add((ImageIO.read(getClass().getResourceAsStream(file))));
-                
             }
-            moveScale = ms;
-            this.hurt = hurt;
-            this.hit = hit;
+            for(String file : info.getRunFrames()){
+                imagesRun.add((ImageIO.read(getClass().getResourceAsStream(file))));
+            }
+            for(String file : info.getJumpFrames()){
+                imagesJump.add((ImageIO.read(getClass().getResourceAsStream(file))));
+            }
+            for(String file : info.getAttackFrames()){
+                imagesAttack.add((ImageIO.read(getClass().getResourceAsStream(file))));
+            }
+            moveScale = info.getMS();
+            this.hurt = info.getHurtBox();
+            this.hit = info.getIdleHitBox();
+            this.attackHitBox = info.getHitAttackBox();
             state = new State();
         }
         catch(Exception e){
@@ -48,6 +66,7 @@ public class Character {
         }
         
     }
+
     
     public CharacterState getState(){
         return state.getCharacterState();
@@ -68,8 +87,8 @@ public class Character {
     public void setPosition(double x, double y){
         this.x = (x* moveScale);
         this.y = (y* moveScale);
-        hurt.setPos(x,y);
-        hit.setPos(x,y);
+        hurt.setPos(x*moveScale,y*moveScale);
+        hit.setPos(x*moveScale,y*moveScale);
     }
     
     public double getXPos(){
@@ -112,12 +131,12 @@ public class Character {
     
     public void hitCollision(Character check){
         if(hurt.checkCollision(check.getHit())){
-            state.setState(CharacterState.HIT);
+            state.setState(CharacterState.HURT);
         }
     }
     
-    public void setHit(CollisionBox hit){
-        this.hit = hit;
+    public void setHit(){
+        this.hit = attackHitBox;
     }
     
     public void draw(Graphics2D g){
@@ -128,8 +147,17 @@ public class Character {
             g.drawImage(imagesIdle.get(((int)animationCounterIdle)%imagesIdle.size()), (int)x, (int)y, null);
             animationCounterIdle += (1.0/20.0);
         }
+        if(getState() == CharacterState.RUN){
+            g.drawImage(imagesRun.get(((int)animationCounterIdle)%imagesRun.size()), (int)x, (int)y, null);
+            animationCounterIdle += (1.0/20.0);
+        }
+        if(getState() == CharacterState.HIT){
+            g.drawImage(imagesAttack.get(((int)animationCounterIdle)%imagesAttack.size()), (int)x, (int)y, null);
+            animationCounterIdle += (1.0/20.0);
+        }
+        
         else{
-            g.drawImage(imagesIdle.get(1), (int)x, (int)y, null);
+            g.drawImage(imagesIdle.get(0), (int)x, (int)y, null);
         }
         
     }
