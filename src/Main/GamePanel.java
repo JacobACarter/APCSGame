@@ -11,10 +11,7 @@ import java.awt.image.BufferedImage;
 import java.awt.event.*;
 import javax.swing.JPanel;
 import javax.swing.*;
-/**
- *
- * @author Jacob
- */
+
 public class GamePanel extends JPanel implements Runnable, KeyListener{
     
     

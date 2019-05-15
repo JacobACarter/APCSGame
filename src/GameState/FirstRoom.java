@@ -21,7 +21,7 @@ public class FirstRoom extends GameState{
     double directionVectorC = 3;
     private Character mainC;
     private ArrayList<Character> enemies = new ArrayList<>();
-    private CollisionBox floor;
+    private ArrayList<CollisionBox> floors = new ArrayList<>();
     private int swordTimer;
     private final boolean left = false;
     private final boolean right = true;
@@ -29,11 +29,13 @@ public class FirstRoom extends GameState{
     public FirstRoom(GameStateManager gsm){
         this.gsm = gsm;
         try{
-            bg = new Background("/Background/firstroom.jpg", 1, 1200, 801);
+            bg = new Background("/Background/firstroom.png", 1, 1200, 801);
             bg.setVector(0,0);
             mainC = new Character(new MainCharacterInfo());
             enemies.add(new Character(new EnemyTypeOneInfo()));
-            floor = new CollisionBox(600,100, 0,200);
+            floors.add(new CollisionBox(200, 100, 0, 280));
+            floors.add(new CollisionBox(30, 100, 260, 285));
+            floors.add(new CollisionBox(200, 100, 350,280));
            
         }
         catch(Exception e){
@@ -47,7 +49,7 @@ public class FirstRoom extends GameState{
         bg.setPosition(0,0);
         mainC.setPosition(50, 100);
         mainC.setState(CharacterState.JUMP);
-        enemies.get(0).setPosition(100, floor.getYPos());
+        enemies.get(0).setPosition(100, floors.get(0).getYPos()-enemies.get(0).getHurt().getHeight());
     }
     
     @Override
@@ -62,23 +64,12 @@ public class FirstRoom extends GameState{
                 e.setPosition(-10, -30);
                 e.setState(CharacterState.IDLE);
             }
-        }
-        if(mainC.getState() == CharacterState.IDLE){
-            verticalVectorC = 0;
-        }       
-        else if(mainC.getState() == CharacterState.HURT){
+        }  
+        
+        if(mainC.getState() == CharacterState.HURT){
             gsm.setState(2);
-        }       
-        //fake gravity thing
-        else if(mainC.getHurt().checkFloor(floor)&& mainC.getState() == CharacterState.JUMP){
-            mainC.setPosition(mainC.getXPos(), floor.getYPos());
-            mainC.setState(CharacterState.IDLE);
-            verticalVectorC = 0;
         }
-        //checks contact with the floor
-        else if (mainC.getState() == CharacterState.JUMP){
-            verticalVectorC += 1;
-        }
+        
         //if the character is currently attacking
         else if (mainC.getState() == CharacterState.HIT){
             swordTimer++;
@@ -91,8 +82,27 @@ public class FirstRoom extends GameState{
         if (mainC.getXPos() > 560) {
             gsm.setState(2);
         }
-        System.out.println(mainC.getHit().getXPos() + " : " +mainC.getHit().getYPos());
+        if(mainC.getYPos()> 320){
+            gsm.setState(2);
+        }
         
+        //fake gravity thing
+        boolean touchingFloor = false;
+        for(CollisionBox floor : floors){
+            if(mainC.getHurt().checkFloor(floor)){
+                if(mainC.getState() == CharacterState.JUMP){
+                    mainC.setState(CharacterState.IDLE);
+                }
+                mainC.setPosition(mainC.getXPos(), floor.getYPos()-mainC.getHurt().getHeight());
+                verticalVectorC = 0;
+                touchingFloor = true;
+            }
+        }
+        if(!touchingFloor){
+            verticalVectorC += 1;
+            mainC.setState(CharacterState.JUMP);
+        }
+        System.out.println(mainC.getState());
         
     }
     

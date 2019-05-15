@@ -43,7 +43,6 @@ public class Character {
     //hit box and hurt box of the characters for collisions
     private CollisionBox hurt;
     private CollisionBox hit;
-    
     private CollisionBox attackHitBoxR;
     private double xOffsetR;
     private double yOffsetR;

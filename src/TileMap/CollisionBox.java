@@ -62,7 +62,10 @@ public class CollisionBox {
     }
     
     public boolean checkFloor(CollisionBox floor){
-        if(((xPos>floor.getXPos() && xPos<floor.getXPos()+floor.getWidth())|| (xPos+width>floor.getXPos() && xPos+width<floor.getXPos()+floor.getWidth())) && yPos > floor.getYPos()){
+        if(((xPos>floor.getXPos() && xPos<floor.getXPos()+floor.getWidth())|| (xPos+width>floor.getXPos() && xPos+width<floor.getXPos()+floor.getWidth())) && yPos+height > floor.getYPos()){
+            return true;
+        }
+        if(((xPos>floor.getXPos() && xPos<floor.getXPos()+floor.getWidth())|| (xPos+width>floor.getXPos() && xPos+width<floor.getXPos()+floor.getWidth())) && yPos+height == floor.getYPos()){
             return true;
         }
         return false;

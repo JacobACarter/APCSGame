@@ -21,6 +21,8 @@ public abstract class CharacterInfo {
         private double yOffsetR;
         private double xOffsetL;
         private double yOffsetL;
+        private double width;
+        private double height;
         
         public CharacterInfo(){
             
