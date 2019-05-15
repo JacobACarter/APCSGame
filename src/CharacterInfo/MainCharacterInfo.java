@@ -11,7 +11,6 @@ public class MainCharacterInfo extends CharacterInfo{
     ArrayList<String> runFrames = new ArrayList<String>();
     ArrayList<String> jumpFrames = new ArrayList<String>();
     ArrayList<String> attackFrames = new ArrayList<String>();
-    private double frame = 0;
     private double ms = 1;
     private CollisionBox idleCollisionBox = new CollisionBox(7,13,50,100);
     private CollisionBox attackHitBox = new CollisionBox(10,5,55,100);
@@ -48,14 +47,6 @@ public class MainCharacterInfo extends CharacterInfo{
         
         public ArrayList<String> getRunFrames(){
             return runFrames;
-        }
-        
-        public int getFrame(){
-            return (int) frame;
-        }
-        
-        public void addToFrame(double add){
-            frame += add;
         }
         
         public double getMS(){

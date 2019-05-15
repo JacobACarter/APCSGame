@@ -7,11 +7,12 @@ import java.util.ArrayList;
 
 public abstract class CharacterInfo {
 
+        /*each one of these objects will be specific to a type of character,
+        it will contain all info regarding the hitbox/hurtboxes and animation frames */
         private ArrayList<String> idleFrames;
         private ArrayList<String> attackFrames;
         private ArrayList<String> jumpFrames;
         private ArrayList<String> runFrames;
-        private double frame = 0;
         private double ms = 1;
         private CollisionBox idleCollisionBox;
         private CollisionBox attackHitBox;
@@ -42,14 +43,6 @@ public abstract class CharacterInfo {
         
         public ArrayList<String> getRunFrames(){
             return runFrames;
-        }
-        
-        public int getFrame(){
-            return (int) frame;
-        }
-        
-        public void addToFrame(double add){
-            frame += add;
         }
         
         public double getMS(){

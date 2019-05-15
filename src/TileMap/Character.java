@@ -12,6 +12,8 @@ import GameState.State.CharacterState;
 import Main.GamePanel;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
@@ -22,27 +24,37 @@ import javax.imageio.ImageIO;
  * @author Jacob
  */
 public class Character {
+    
+    //holds all of the frames for each animation
     private ArrayList<BufferedImage> imagesIdle = new ArrayList<>();
     private ArrayList<BufferedImage> imagesRun = new ArrayList<>();
     private ArrayList<BufferedImage> imagesJump= new ArrayList<>();
     private ArrayList<BufferedImage> imagesAttack = new ArrayList<>();
+    //counter to know which frame to print
     private double animationCounterIdle = 0;
     private double animationCounterRun = 0;
     private double animationCounterJump = 0;
     private double animationCounterAttack = 0;
+    //basic coordinates of the character and how it moves
     private double x;
     private double y;
     private double dx;
     private double dy;
+    //hit box and hurt box of the characters for collisions
     private CollisionBox hurt;
     private CollisionBox hit;
     private CollisionBox attackHitBox;
+    //variables to know what the character is currently doing
     private State state;
+    private boolean direction;
+    private final boolean left = false;
+    private final boolean right = true;
     
     private double moveScale;
     
     public Character(CharacterInfo info){
         
+        //loading all the frames for animation from the characterinfo class
         try{
             for(String file : info.getIdleFrames()){
                 imagesIdle.add((ImageIO.read(getClass().getResourceAsStream(file))));
@@ -56,10 +68,13 @@ public class Character {
             for(String file : info.getAttackFrames()){
                 imagesAttack.add((ImageIO.read(getClass().getResourceAsStream(file))));
             }
+            
+            //getting all other info from the character info class
             moveScale = info.getMS();
             this.hurt = info.getHurtBox();
             this.hit = info.getIdleHitBox();
             this.attackHitBox = info.getHitAttackBox();
+            //instantiating the state and defaulting to idle
             state = new State();
         }
         catch(Exception e){
@@ -67,8 +82,31 @@ public class Character {
         }
         
     }
-
     
+//********************Basic Access and Set methods*********************************************
+    
+    //resets for animation
+    public void setDirection(boolean d){
+        direction = d;
+    }
+    
+    public void resetIdleAnimation(){
+        animationCounterIdle = 0;
+    }
+    
+    public void resetRunAnimation(){
+        animationCounterRun = 0;
+    }
+    
+    public void resetAttackAnimation(){
+        animationCounterAttack= 0;
+    }
+    
+    public void resetIdleJump(){
+        animationCounterJump = 0;
+    }
+    
+    //access what state the character is in
     public CharacterState getState(){
         return state.getCharacterState();
     }
@@ -104,14 +142,14 @@ public class Character {
         this.dx = dx;
         this.dy = dy;
     }
-    
+    //updates the position of the character as well as its hit/hurt boxes
     public void update(){
         x += dx;
         y += dy;
         hurt.updatePos(dx, dy);
         hit.updatePos(dx, dy);
     }
-    
+    //update but checks for collisions with enemie
     public void update(ArrayList<Character> enemies){
         x += dx;
         y += dy;
@@ -139,30 +177,41 @@ public class Character {
             state.setState(CharacterState.HURT);
         }
     }
-    
+    //sets the hit box to that of the characters attack
     public void setHit(){
         this.hit = attackHitBox;
     }
-    
+    //drawing the character
     public void draw(Graphics2D g){
+        BufferedImage img;
+        //checks state and decides which files to read from
         if(getState() == CharacterState.HURT){
-            g.drawImage(imagesIdle.get(0), (int)x, (int)y, null);
+            img = imagesIdle.get(0);
         }
         if(getState() == CharacterState.IDLE){
-            g.drawImage(imagesIdle.get(((int)animationCounterIdle)%imagesIdle.size()), (int)x, (int)y, null);
+            img = imagesIdle.get(((int)animationCounterIdle)%imagesIdle.size());
             animationCounterIdle += (1.0/20.0);
         }
         if(getState() == CharacterState.RUN){
-            g.drawImage(imagesRun.get(((int)animationCounterIdle)%imagesRun.size()), (int)x, (int)y, null);
-            animationCounterIdle += (1.0/20.0);
+            img = imagesRun.get(((int)animationCounterIdle)%imagesRun.size());
+            animationCounterRun += (1.0/20.0);
         }
         if(getState() == CharacterState.HIT){
-            g.drawImage(imagesAttack.get(((int)animationCounterIdle)%imagesAttack.size()), (int)x, (int)y, null);
-            animationCounterIdle += (1.0/20.0);
-        }
-        
+            img = imagesAttack.get(((int)animationCounterIdle)%imagesAttack.size());
+            animationCounterAttack += (1.0/20.0);
+        }   
         else{
-            g.drawImage(imagesIdle.get(0), (int)x, (int)y, null);
+            img = imagesIdle.get(0);
+        }
+        if(direction == left){
+            g.drawImage(img, (int)x, (int)y, null);
+        }
+        else{
+            AffineTransform tx = AffineTransform.getScaleInstance(-1,1);
+            tx.translate(-img.getWidth(null), 0);
+            AffineTransformOp op = new AffineTransformOp(tx,AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+            BufferedImage reflect = op.filter(img, null);
+            g.drawImage(reflect, (int)x, (int)y, null);     
         }
         
     }

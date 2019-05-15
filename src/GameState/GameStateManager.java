@@ -23,7 +23,7 @@ public class GameStateManager {
         currentState = MENUSTATE;
         gameStates.add(new MenuState(this));
         gameStates.add(new FirstRoom(this));
-        gameStates.add(new BossRoom(this));
+        //gameStates.add(new BossRoom(this));
         gameStates.add(new GameOver(this));
 
     }

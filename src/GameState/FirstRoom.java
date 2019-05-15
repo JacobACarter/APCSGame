@@ -11,6 +11,7 @@ import TileMap.CollisionBox;
 import CharacterInfo.*;
 
 
+
 public class FirstRoom extends GameState{
     
     private Background bg;
@@ -22,7 +23,9 @@ public class FirstRoom extends GameState{
     private ArrayList<Character> enemies = new ArrayList<>();
     private CollisionBox floor;
     private int swordTimer;
-    
+    private final boolean left = false;
+    private final boolean right = true;
+      
     public FirstRoom(GameStateManager gsm){
         this.gsm = gsm;
         try{
@@ -64,15 +67,17 @@ public class FirstRoom extends GameState{
         if(mainC.getState() == CharacterState.HURT){
             gsm.setState(2);
         }       
-        
+        //fake gravity thing
         if(!mainC.getHurt().checkFloor(floor)&&mainC.getState() == CharacterState.JUMP){
             verticalVectorC += 1;
         }
+        //checks contact with the floor
         else if (mainC.getState() == CharacterState.JUMP){
             mainC.setPosition(mainC.getXPos(), floor.getYPos());
             mainC.setState(CharacterState.IDLE);
             verticalVectorC = 0;
         }
+        //if the character is currently attacking
         if (mainC.getState() == CharacterState.HIT){
             swordTimer++;
             if (swordTimer >= 15){
@@ -80,9 +85,11 @@ public class FirstRoom extends GameState{
                 mainC.setState(CharacterState.IDLE);
             }
         }
+        //if the character walks into the next room
         if (mainC.getXPos() > 560) {
             gsm.setState(2);
         }
+        System.out.println(mainC.getXPos());
     }
     
 
@@ -105,10 +112,12 @@ public class FirstRoom extends GameState{
         if (keyList.indexOf(KeyEvent.VK_A) != -1){
             horizontalVectorC =-3;
             directionVectorC = horizontalVectorC;
+            mainC.setDirection(left);
         }
         if (keyList.indexOf(KeyEvent.VK_D) != -1){
             horizontalVectorC = 3;
             directionVectorC = horizontalVectorC;
+            mainC.setDirection(right);
         }
         if ((k == KeyEvent.VK_W)&& (mainC.getState() != CharacterState.JUMP)){
             mainC.setState(CharacterState.JUMP);
