@@ -17,6 +17,10 @@ public abstract class CharacterInfo {
         private CollisionBox idleCollisionBox;
         private CollisionBox attackHitBox;
         private CollisionBox idleHitBox;
+        private double xOffsetR;
+        private double yOffsetR;
+        private double xOffsetL;
+        private double yOffsetL;
         
         public CharacterInfo(){
             
@@ -53,12 +57,32 @@ public abstract class CharacterInfo {
             return idleCollisionBox;
         }
         
-        public CollisionBox getHitAttackBox(){
+        public CollisionBox getHitAttackBoxR(){
+            return attackHitBox;
+        }
+        
+        public CollisionBox getHitAttackBoxL(){
             return attackHitBox;
         }
         
         public CollisionBox getIdleHitBox(){
             return idleHitBox;
+        }
+        
+        public double getXOffsetR(){
+            return xOffsetR;
+        }
+        
+        public double getYOffsetR(){
+            return yOffsetR;
+        }
+        
+        public double getXOffsetL(){
+            return xOffsetL;
+        }
+        
+        public double getYOffsetL(){
+            return yOffsetL;
         }
       
 }

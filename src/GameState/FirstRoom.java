@@ -33,7 +33,7 @@ public class FirstRoom extends GameState{
             bg.setVector(0,0);
             mainC = new Character(new MainCharacterInfo());
             enemies.add(new Character(new EnemyTypeOneInfo()));
-            floor = new CollisionBox(600,100, 0,150);
+            floor = new CollisionBox(600,100, 0,200);
            
         }
         catch(Exception e){
@@ -52,7 +52,7 @@ public class FirstRoom extends GameState{
     
     @Override
     public void update(){
-        
+
         mainC.setVector(horizontalVectorC, verticalVectorC);
         mainC.update(enemies);
         for(Character e: enemies){
@@ -63,25 +63,27 @@ public class FirstRoom extends GameState{
                 e.setState(CharacterState.IDLE);
             }
         }
-        
-        if(mainC.getState() == CharacterState.HURT){
+        if(mainC.getState() == CharacterState.IDLE){
+            verticalVectorC = 0;
+        }       
+        else if(mainC.getState() == CharacterState.HURT){
             gsm.setState(2);
         }       
         //fake gravity thing
-        if(!mainC.getHurt().checkFloor(floor)&&mainC.getState() == CharacterState.JUMP){
-            verticalVectorC += 1;
-        }
-        //checks contact with the floor
-        else if (mainC.getState() == CharacterState.JUMP){
+        else if(mainC.getHurt().checkFloor(floor)&& mainC.getState() == CharacterState.JUMP){
             mainC.setPosition(mainC.getXPos(), floor.getYPos());
             mainC.setState(CharacterState.IDLE);
             verticalVectorC = 0;
         }
+        //checks contact with the floor
+        else if (mainC.getState() == CharacterState.JUMP){
+            verticalVectorC += 1;
+        }
         //if the character is currently attacking
-        if (mainC.getState() == CharacterState.HIT){
+        else if (mainC.getState() == CharacterState.HIT){
             swordTimer++;
             if (swordTimer >= 15){
-                mainC.setHit();
+                mainC.setHit(true);
                 mainC.setState(CharacterState.IDLE);
             }
         }
@@ -89,7 +91,9 @@ public class FirstRoom extends GameState{
         if (mainC.getXPos() > 560) {
             gsm.setState(2);
         }
-        System.out.println(mainC.getXPos());
+        System.out.println(mainC.getHit().getXPos() + " : " +mainC.getHit().getYPos());
+        
+        
     }
     
 
@@ -113,11 +117,17 @@ public class FirstRoom extends GameState{
             horizontalVectorC =-3;
             directionVectorC = horizontalVectorC;
             mainC.setDirection(left);
+            if(mainC.getState() == CharacterState.IDLE){
+                mainC.setState(CharacterState.RUN);
+            }
         }
         if (keyList.indexOf(KeyEvent.VK_D) != -1){
             horizontalVectorC = 3;
             directionVectorC = horizontalVectorC;
             mainC.setDirection(right);
+            if(mainC.getState() == CharacterState.IDLE){
+                mainC.setState(CharacterState.RUN);
+            }
         }
         if ((k == KeyEvent.VK_W)&& (mainC.getState() != CharacterState.JUMP)){
             mainC.setState(CharacterState.JUMP);
@@ -125,12 +135,9 @@ public class FirstRoom extends GameState{
         }
         else if (k == KeyEvent.VK_SPACE && mainC.getState() != CharacterState.HURT && mainC.getState() != CharacterState.JUMP){
             mainC.setState(CharacterState.HIT);
-            mainC.setHit();
+            mainC.setHit(false);
             swordTimer = 0;
         }
-//        if (keyList.indexOf(KeyEvent.VK_S) != -1){
-//            verticalVectorC = 1;
-//        }
     }
     
     @Override
@@ -138,7 +145,11 @@ public class FirstRoom extends GameState{
         keyList.remove(new Integer(k));
         //character
         if (keyList.indexOf(KeyEvent.VK_A) == -1 && keyList.indexOf(KeyEvent.VK_D) == -1){
+            if(mainC.getState() == CharacterState.RUN){
+                mainC.setState(CharacterState.IDLE);
+            }
             horizontalVectorC = 0;
+            mainC.resetRunAnimation();        
         }
     }
     

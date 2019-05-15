@@ -43,7 +43,15 @@ public class Character {
     //hit box and hurt box of the characters for collisions
     private CollisionBox hurt;
     private CollisionBox hit;
-    private CollisionBox attackHitBox;
+    
+    private CollisionBox attackHitBoxR;
+    private double xOffsetR;
+    private double yOffsetR;
+    
+    private CollisionBox attackHitBoxL;
+    private double xOffsetL;
+    private double yOffsetL;
+    private CollisionBox idleHitBox;
     //variables to know what the character is currently doing
     private State state;
     private boolean direction;
@@ -72,8 +80,14 @@ public class Character {
             //getting all other info from the character info class
             moveScale = info.getMS();
             this.hurt = info.getHurtBox();
-            this.hit = info.getIdleHitBox();
-            this.attackHitBox = info.getHitAttackBox();
+            this.idleHitBox = info.getIdleHitBox();
+            this.hit = this.idleHitBox;
+            this.attackHitBoxR = info.getHitAttackBoxR();
+            this.attackHitBoxL = info.getHitAttackBoxL();
+            this.xOffsetL = info.getXOffsetL();
+            this.yOffsetL = info.getYOffsetL();
+            this.xOffsetR = info.getXOffsetR();
+            this.yOffsetR = info.getYOffsetR();
             //instantiating the state and defaulting to idle
             state = new State();
         }
@@ -178,8 +192,22 @@ public class Character {
         }
     }
     //sets the hit box to that of the characters attack
-    public void setHit(){
-        this.hit = attackHitBox;
+    public void setHit(boolean idle){
+        if(idle){
+            this.hit = idleHitBox;
+        }
+        else{
+            if(direction == left){
+                this.hit = attackHitBoxL;
+                hit.setPos(x+xOffsetL, y+yOffsetL);
+            }
+            else{
+                this.hit = attackHitBoxR;
+                hit.setPos(x+xOffsetR, y+ yOffsetR);
+            }
+        }
+
+      
     }
     //drawing the character
     public void draw(Graphics2D g){
@@ -188,18 +216,21 @@ public class Character {
         if(getState() == CharacterState.HURT){
             img = imagesIdle.get(0);
         }
-        if(getState() == CharacterState.IDLE){
+        else if(getState() == CharacterState.IDLE){
             img = imagesIdle.get(((int)animationCounterIdle)%imagesIdle.size());
             animationCounterIdle += (1.0/20.0);
         }
-        if(getState() == CharacterState.RUN){
-            img = imagesRun.get(((int)animationCounterIdle)%imagesRun.size());
+        else if(getState() == CharacterState.RUN){
+            img = imagesRun.get(((int)animationCounterRun)%imagesRun.size());
             animationCounterRun += (1.0/20.0);
         }
-        if(getState() == CharacterState.HIT){
-            img = imagesAttack.get(((int)animationCounterIdle)%imagesAttack.size());
+        else if(getState() == CharacterState.HIT){
+            img = imagesAttack.get(((int)animationCounterAttack)%imagesAttack.size());
             animationCounterAttack += (1.0/20.0);
         }   
+        else if(getState() == CharacterState.JUMP){
+            img = imagesJump.get(((int)animationCounterJump)%imagesJump.size());
+        }
         else{
             img = imagesIdle.get(0);
         }
