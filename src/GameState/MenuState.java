@@ -17,11 +17,11 @@ public class MenuState extends GameState{
     
     private Background bg;
     private int currentChoice = 0;
-    private String[] options = {"Start", "Quit"};
+    private String[] options = {"Start"};
     private Color titleColor;
     private Font titleFont;
     private Font font;
-    private final String GAMENAME = "Placeholder";
+    private final String GAMENAME = "AP Exams are kindaaaaa";
     
     public MenuState(GameStateManager gsm){
         this.gsm = gsm;
@@ -57,10 +57,10 @@ public class MenuState extends GameState{
         //runs through all options
         for(int i = 0; i<options.length; i++){
             if (i== currentChoice){
-                g.setColor(Color.BLUE);
+                g.setColor(Color.RED);
             }
             else{
-                g.setColor(Color.RED);
+                g.setColor(Color.BLACK);
             }
             g.drawString(options[i], 250, 200+i*30);
         }
