@@ -12,7 +12,7 @@ import CharacterInfo.*;
 
 
 
-public class FirstRoom extends GameState{
+public class SecondRoom extends GameState{
     
     private Background bg;
     private GameStateManager gsm;
@@ -26,16 +26,20 @@ public class FirstRoom extends GameState{
     private final boolean left = false;
     private final boolean right = true;
       
-    public FirstRoom(GameStateManager gsm){
+    public SecondRoom(GameStateManager gsm){
         this.gsm = gsm;
         try{
             bg = new Background("/Background/firstroom.png", 1, 1200, 801);
             bg.setVector(0,0);
             mainC = new Character(new MainCharacterInfo());
             enemies.add(new Character(new EnemyTypeOneInfo()));
-            floors.add(new CollisionBox(200, 100, 0, 280));
-            floors.add(new CollisionBox(30, 100, 260, 285));
-            floors.add(new CollisionBox(200, 100, 350,280));
+            enemies.add(new Character(new EnemyTypeOneInfo()));
+            enemies.add(new Character(new EnemyTypeOneInfo()));
+            floors.add(new CollisionBox(100, 300, 0, 100));
+            floors.add(new CollisionBox(40, 200, 140, 210));
+            floors.add(new CollisionBox(40, 100, 220, 280));
+            floors.add(new CollisionBox(60, 100, 300, 260));
+            floors.add(new CollisionBox(200, 200, 410, 270));
            
         }
         catch(Exception e){
@@ -50,6 +54,8 @@ public class FirstRoom extends GameState{
         mainC.setPosition(50, 100);
         mainC.setState(CharacterState.JUMP);
         enemies.get(0).setPosition(100, floors.get(0).getYPos()-enemies.get(0).getHurt().getHeight());
+        enemies.get(1).setPosition(190, floors.get(2).getYPos()-enemies.get(0).getHurt().getHeight());
+        enemies.get(2).setPosition(420, floors.get(4).getYPos()-enemies.get(0).getHurt().getHeight());
     }
     
     @Override
@@ -82,11 +88,15 @@ public class FirstRoom extends GameState{
         //if the character walks into the next room
         if (mainC.getXPos() > 560) {
             mainC.setVector(0, 0);
-            gsm.setState(2);
+            gsm.setState(3);
         }
         if(mainC.getYPos()> 320){
             mainC.setVector(0, 0);
             gsm.setState(4);
+        }
+        if (mainC.getXPos() < 0) {
+            mainC.setVector(0, 0);
+            gsm.setState(1);
         }
         
         //fake gravity thing
@@ -115,11 +125,13 @@ public class FirstRoom extends GameState{
                     }
                     bad.setVector(0);
                     bad.setTouching(true);
+                    bad.update(mainC);
                 }
             }
             if(!bad.getTouching()){
-                bad.setVector(10);
+                bad.setVector((-(mainC.getXPos() - bad.getXPos()) / 100) + 0.5, 0);
                 bad.setState(CharacterState.JUMP);
+                bad.update(mainC);
             }
         }
     }

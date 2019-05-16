@@ -24,7 +24,7 @@ public class EnemyTypeOneInfo extends CharacterInfo{
         //runFrames.add("/Characters/Main/RunFrame1");
         //runFrames.add("/Character/Main/RunFrame2");
         
-        //jumpFrames.add("/Character/Main/JumpFrame1");
+        jumpFrames.add("/Characters/EnemyTypeOne/IdleFrame1.png");
         //jumpFrames.add("/Character/Main/JumpFrame2");
         
         //attackFrames.add("/Character/Main/AttackFrame1");

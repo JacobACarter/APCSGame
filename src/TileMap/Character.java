@@ -56,6 +56,7 @@ public class Character {
     private boolean direction;
     private final boolean left = false;
     private final boolean right = true;
+    private boolean touchingFloor;
     
     private double moveScale;
     
@@ -128,6 +129,14 @@ public class Character {
         state.setState(c);
     }
     
+    public void setTouching(boolean touching){
+        touchingFloor = touching;
+    }
+    
+    public boolean getTouching(){
+        return touchingFloor;
+    }
+    
     public CollisionBox getHit(){
         return hit;
     }
@@ -155,6 +164,14 @@ public class Character {
         this.dx = dx;
         this.dy = dy;
     }
+    
+    public void setVector(double dy){
+        this.dy = dy;
+    }
+    
+    public double getVector(){
+        return dy;
+    }
     //updates the position of the character as well as its hit/hurt boxes
     public void update(){
         x += dx;
@@ -181,9 +198,9 @@ public class Character {
         hitCollision(protag);
     }
     
-    public void update(KnightBoss boss){
-        
-    }
+//    public void update(KnightBoss boss){
+//        
+//    }
     
     public void hitCollision(Character check){
         if(hurt.checkCollision(check.getHit())){
