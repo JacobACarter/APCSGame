@@ -102,7 +102,6 @@ public class FirstRoom extends GameState{
             verticalVectorC += 1;
             mainC.setState(CharacterState.JUMP);
         }
-        System.out.println(mainC.getState());
         
     }
     

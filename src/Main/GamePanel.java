@@ -9,6 +9,10 @@ import GameState.GameStateManager;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 import javax.swing.*;
 
@@ -33,6 +37,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     //game state manager
     private GameStateManager gsm;
     
+    //audio file
+    private String fileNameAudio = "/Audio.wav";
+    private Clip clip;
+    
     public GamePanel(){
         super();
         setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
@@ -55,6 +63,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         running = true;
         
         gsm = new GameStateManager();
+        try{
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(fileNameAudio));
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
     
     public void run(){
@@ -62,6 +79,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         long start;
         long elapsed;
         long wait;
+        clip.start();
         
         
         //basic game loop

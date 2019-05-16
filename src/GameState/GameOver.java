@@ -14,7 +14,7 @@ public class GameOver extends GameState{
     
     private Background bg;
     private int currentChoice = 0;
-    private String[] options = {"Start", "Quit"};
+    private String[] options = {"Retry"};
     private Color titleColor;
     private Font titleFont;
     private Font font;
@@ -47,7 +47,16 @@ public class GameOver extends GameState{
         g.setColor(titleColor);
         g.setFont(titleFont);
         g.drawString("GAME OVER", 200, 100);
-        
+        g.setFont(font);
+        for(int i = 0; i<options.length; i++){
+            if (i== currentChoice){
+                g.setColor(Color.RED);
+            }
+            else{
+                g.setColor(Color.BLACK);
+            }
+            g.drawString(options[i], 250, 200+i*30);
+        }
         
     }
     
