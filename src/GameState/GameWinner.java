@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package GameState;
 
 import java.awt.*;
@@ -13,24 +9,23 @@ import java.awt.event.KeyEvent;
  *
  * @author Jacob
  */
-public class MenuState extends GameState{
+public class GameWinner extends GameState{
     
     private Background bg;
     private int currentChoice = 0;
-    private String[] options = {"Start"};
+    private String[] options = {"Retry"};
     private Color titleColor;
     private Font titleFont;
     private Font font;
-    private final String GAMENAME = "AP Exams Limit";
     
-    public MenuState(GameStateManager gsm){
+    public GameWinner(GameStateManager gsm){
         this.gsm = gsm;
         
         try{
             bg = new Background("/Background/menubg.gif", 1, 590,336);
             bg.setVector(-.1,0);
             
-            titleColor = new Color(182, 0, 0);
+            titleColor = new Color(255, 255, 255);
             titleFont = new Font("Centruy Gothic", Font.PLAIN, 36);
             font = new Font("Arial", Font.PLAIN, 24);
         }
@@ -50,11 +45,8 @@ public class MenuState extends GameState{
         //draws title on top of background
         g.setColor(titleColor);
         g.setFont(titleFont);
-        g.drawString(GAMENAME, 200, 100);
-        
-        //draws menu options
+        g.drawString("YOU WIN", 200, 100);
         g.setFont(font);
-        //runs through all options
         for(int i = 0; i<options.length; i++){
             if (i== currentChoice){
                 g.setColor(Color.RED);
@@ -64,6 +56,7 @@ public class MenuState extends GameState{
             }
             g.drawString(options[i], 250, 200+i*30);
         }
+        
     }
     
     private void select(){
