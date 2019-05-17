@@ -29,7 +29,7 @@ public class SecondRoom extends GameState{
     public SecondRoom(GameStateManager gsm){
         this.gsm = gsm;
         try{
-            bg = new Background("/Background/firstroom.png", 1, 1200, 801);
+            bg = new Background("/Background/roomtwo.png", 1, 1200, 801);
             bg.setVector(0,0);
             mainC = new Character(new MainCharacterInfo());
             enemies.add(new Character(new EnemyTypeOneInfo()));
@@ -53,6 +53,7 @@ public class SecondRoom extends GameState{
         bg.setPosition(0,0);
         mainC.setPosition(50, 100);
         mainC.setState(CharacterState.JUMP);
+        mainC.setVector(0,0);
         enemies.get(0).setPosition(100, floors.get(0).getYPos()-enemies.get(0).getHurt().getHeight());
         enemies.get(1).setPosition(190, floors.get(2).getYPos()-enemies.get(0).getHurt().getHeight());
         enemies.get(2).setPosition(420, floors.get(4).getYPos()-enemies.get(0).getHurt().getHeight());

@@ -35,7 +35,7 @@ public class FirstRoom extends GameState{
             enemies.add(new Character(new EnemyTypeOneInfo()));
             floors.add(new CollisionBox(200, 100, 0, 280));
             floors.add(new CollisionBox(30, 100, 260, 285));
-            floors.add(new CollisionBox(200, 100, 350,280));
+            floors.add(new CollisionBox(210, 100, 350,280));
            
         }
         catch(Exception e){
@@ -46,7 +46,9 @@ public class FirstRoom extends GameState{
     
     @Override
     public void init(){
+        keyList.clear();
         bg.setPosition(0,0);
+        mainC.setVector(0,0);
         mainC.setPosition(50, 100);
         mainC.setState(CharacterState.JUMP);
         enemies.get(0).setPosition(100, floors.get(0).getYPos()-enemies.get(0).getHurt().getHeight());
