@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package TileMap;
+package Mechanics;
 
 import CharacterInfo.CharacterInfo;
 import CharacterInfo.MainCharacterInfo;
@@ -169,6 +169,10 @@ public class Character {
         this.dy = dy;
     }
     
+    public void addVector(double ddy){
+        this.dy += ddy;
+    }
+    
     public double getVector(){
         return dy;
     }
@@ -189,6 +193,8 @@ public class Character {
             hitCollision(e);
         }
     }
+    
+
     
     public void update(Character protag){
         x += dx;

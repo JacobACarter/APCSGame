@@ -3,12 +3,13 @@ package GameState;
 
 import GameState.State.CharacterState;
 import java.awt.Graphics2D;
-import TileMap.Background;
+import Mechanics.Background;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import TileMap.Character;
-import TileMap.CollisionBox;
+import Mechanics.Character;
+import Mechanics.CollisionBox;
 import CharacterInfo.*;
+import Main.Constants;
 
 
 
@@ -50,6 +51,7 @@ public class SecondRoom extends GameState{
     
     @Override
     public void init(){
+        keyList.clear();
         bg.setPosition(0,0);
         mainC.setPosition(50, 100);
         mainC.setState(CharacterState.JUMP);
@@ -113,7 +115,7 @@ public class SecondRoom extends GameState{
             }
         }
         if(!mainC.getTouching()){
-            verticalVectorC += 1;
+            verticalVectorC += Constants.gravity;
             mainC.setState(CharacterState.JUMP);
         }
         
@@ -130,7 +132,7 @@ public class SecondRoom extends GameState{
                 }
             }
             if(!bad.getTouching()){
-                bad.setVector((-(mainC.getXPos() - bad.getXPos()) / 100) + 0.5, 0);
+                bad.setVector((-(mainC.getXPos() - bad.getXPos()) / 100) - ((mainC.getXPos() - bad.getXPos()) / 50) , 0);
                 bad.setState(CharacterState.JUMP);
                 bad.update(mainC);
             }
@@ -172,12 +174,15 @@ public class SecondRoom extends GameState{
         }
         if ((k == KeyEvent.VK_W)&& (mainC.getState() != CharacterState.JUMP)){
             mainC.setState(CharacterState.JUMP);
-            verticalVectorC = -10;
+            verticalVectorC = Constants.jumpVelocity;
         }
         else if (k == KeyEvent.VK_SPACE && mainC.getState() != CharacterState.HURT && mainC.getState() != CharacterState.JUMP){
             mainC.setState(CharacterState.HIT);
             mainC.setHit(false);
             swordTimer = 0;
+        }
+        if (k == KeyEvent.VK_ESCAPE){
+            System.exit(0);
         }
     }
     

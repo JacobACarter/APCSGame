@@ -1,7 +1,7 @@
 
 package CharacterInfo;
 
-import TileMap.CollisionBox;
+import Mechanics.CollisionBox;
 import java.util.ArrayList;
 
 

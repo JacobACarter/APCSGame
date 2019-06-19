@@ -3,7 +3,7 @@
 package GameState;
 
 import java.awt.*;
-import TileMap.Background;
+import Mechanics.Background;
 import java.awt.event.KeyEvent;
 
 /**
@@ -14,7 +14,7 @@ public class GameOver extends GameState{
     
     private Background bg;
     private int currentChoice = 0;
-    private String[] options = {"Retry"};
+    private String[] options = {"Retry", "Quit"};
     private Color titleColor;
     private Font titleFont;
     private Font font;
@@ -68,7 +68,7 @@ public class GameOver extends GameState{
         }
         if(currentChoice == 1){
             //selected quit
-            
+            System.exit(0);
         }
     }
     //only can click enter up and down

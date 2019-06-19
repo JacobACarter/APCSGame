@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package TileMap;
+package Mechanics;
 
 
 public class CollisionBox {
@@ -69,5 +69,14 @@ public class CollisionBox {
             return true;
         }
         return false;
+    }
+    
+    public boolean checkLeft(CollisionBox wall){
+        if((xPos>wall.getXPos() && xPos < wall.getXPos()+ wall.getWidth()) && xPos+width > wall.getXPos()){
+            
+            
+            
+        }
+        return true;
     }
 }

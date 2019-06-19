@@ -2,7 +2,7 @@
 package GameState;
 
 import java.awt.*;
-import TileMap.Background;
+import Mechanics.Background;
 import java.awt.event.KeyEvent;
 
 /**

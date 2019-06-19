@@ -1,7 +1,7 @@
 
 package CharacterInfo;
 
-import TileMap.CollisionBox;
+import Mechanics.CollisionBox;
 import java.util.ArrayList;
 
 
@@ -12,7 +12,7 @@ public class MainCharacterInfo extends CharacterInfo{
     ArrayList<String> jumpFrames = new ArrayList<String>();
     ArrayList<String> attackFrames = new ArrayList<String>();
     private double ms = 1;
-    private CollisionBox idleCollisionBox = new CollisionBox(7,13,50,100);
+    private CollisionBox idleCollisionBox = new CollisionBox(50,100,50,100);
     
     private CollisionBox attackHitBoxR = new CollisionBox(10,5,55,100);
     private double xOffsetR = 5;
@@ -21,23 +21,21 @@ public class MainCharacterInfo extends CharacterInfo{
     private CollisionBox attackHitBoxL = new CollisionBox(10,5,40,100);
     private double xOffsetL = -10;
     private double yOffsetL = 0;
-    private CollisionBox idleHitBox = new CollisionBox(0,0, 50, 100);
+    private CollisionBox idleHitBox = new CollisionBox(50,100, 50, 100);
     
    
 
     
     public MainCharacterInfo(){
         
-        idleFrames.add("/Characters/Main/IdleFrame1.png");
-        idleFrames.add("/Characters/Main/IdleFrame2.png");
+        idleFrames.add("/Characters/Main/MainC.gif");
+
+        runFrames.add("/Characters/Main/MainC.gif");
         
-        runFrames.add("/Characters/Main/RunFrame1.png");
-        runFrames.add("/Characters/Main/RunFrame2.png");
-        
-        jumpFrames.add("/Characters/Main/JumpFrame1.png");
+        jumpFrames.add("/Characters/Main/MainC.gif");
         //jumpFrames.add("/Character/Main/JumpFrame2.png");
         
-        attackFrames.add("/Characters/Main/AttackFrame1.png");
+        attackFrames.add("/Characters/Main/MainC.gif");
         //attackFrames.add("/Character/Main/AttackFrame2");
     }
     
