@@ -6,6 +6,7 @@
 package Main;
 
 public class Constants {
-    public static final double jumpVelocity = -7.5;
-    public static final double gravity = .3;
+    public static final double jumpVelocity = -20;
+    public static final double gravity = 1.2;
+    public static final double runSpeed = 8;
 }

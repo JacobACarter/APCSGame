@@ -54,10 +54,8 @@ public class FirstRoom extends GameState{
     
     @Override
     public void update(){
+       
         
-        System.out.println(horizontalVectorC + " " + verticalVectorC);
-        //updates position according to key pressed
-        mainC.setVector(horizontalVectorC, verticalVectorC);
         //checks collision with enemies
         //checks if enemies are hit
         //sets the game to game over screen if the character is hurt
@@ -75,7 +73,7 @@ public class FirstRoom extends GameState{
             }
         }
         //if the character walks into the next room
-        if (mainC.getXPos() > 560) {
+        if (mainC.getXPos() > 1920) {
             mainC.setVector(0, 0);
             gsm.setState(2);
         }
@@ -87,25 +85,47 @@ public class FirstRoom extends GameState{
         
         //fake gravity thing
         updateGravity(mainC);
+        System.out.println(verticalVectorC);
+        //updates position according to key pressed
+        mainC.setVector(horizontalVectorC, verticalVectorC);
+
         
         mainC.update();
     }
     
     public void updateGravity(Character cha){
+//        mainC.setTouching(false);
+//        for(CollisionBox floor : floors){
+//            if(mainC.getHurt().checkCollision(floor)){
+//                if(mainC.getState() == CharacterState.JUMP){
+//                    mainC.setState(CharacterState.IDLE);
+//                }
+//                mainC.setPosition(mainC.getXPos(), floor.getYPos()-mainC.getHurt().getHeight());
+//                mainC.setVector(horizontalVectorC, 0);
+//                verticalVectorC = 0;
+//                mainC.setTouching(true);
+//            }
+//        }
+//        if(!mainC.getTouching()){
+//            verticalVectorC += Constants.gravity;
+//            mainC.setState(CharacterState.JUMP);
+//        }
+//        System.out.println(mainC.getState());
+  
         mainC.setTouching(false);
-        for(CollisionBox floor : floors){
+        for(CollisionBox floor: floors){
             if(mainC.getHurt().checkFloor(floor)){
-                if(mainC.getState() == CharacterState.JUMP){
+                mainC.setPosition(mainC.getXPos(), floor.getYPos() - mainC.getHurt().getHeight());
+                if(mainC.getState() ==  CharacterState.JUMP){
+                    verticalVectorC = 0;
                     mainC.setState(CharacterState.IDLE);
                 }
-                mainC.setPosition(mainC.getXPos(), floor.getYPos()-mainC.getHurt().getHeight());
-                verticalVectorC = 0;
                 mainC.setTouching(true);
             }
         }
         if(!mainC.getTouching()){
-            verticalVectorC += Constants.gravity;
             mainC.setState(CharacterState.JUMP);
+            verticalVectorC += Constants.gravity;
         }
     }
     
@@ -128,8 +148,9 @@ public class FirstRoom extends GameState{
             keyList.add(k);
         }
         //character
+        horizontalVectorC = 0;
         if (keyList.indexOf(KeyEvent.VK_A) != -1){
-            horizontalVectorC =-3;
+            horizontalVectorC -= Constants.runSpeed;
  
             mainC.setDirection(left);
             if(mainC.getState() == CharacterState.IDLE){
@@ -137,14 +158,13 @@ public class FirstRoom extends GameState{
             }
         }
         if (keyList.indexOf(KeyEvent.VK_D) != -1){
-            horizontalVectorC = 3;
+            horizontalVectorC += Constants.runSpeed;
             mainC.setDirection(right);
             if(mainC.getState() == CharacterState.IDLE){
                 mainC.setState(CharacterState.RUN);
             }
         }
-        if ((k == KeyEvent.VK_W)&& (mainC.getState() != CharacterState.JUMP)){
-            mainC.setState(CharacterState.JUMP);
+        if ((k == KeyEvent.VK_W)&& (mainC.getState() != CharacterState.JUMP)){           
             verticalVectorC = Constants.jumpVelocity;
         }
         else if (k == KeyEvent.VK_SPACE && mainC.getState() != CharacterState.HURT && mainC.getState() != CharacterState.JUMP){
@@ -165,10 +185,26 @@ public class FirstRoom extends GameState{
         if (keyList.indexOf(KeyEvent.VK_A) == -1 && keyList.indexOf(KeyEvent.VK_D) == -1){
             if(mainC.getState() == CharacterState.RUN){
                 mainC.setState(CharacterState.IDLE);
-                horizontalVectorC = 0;
+                
             }
             horizontalVectorC = 0;
             mainC.resetRunAnimation();        
+        }
+        horizontalVectorC = 0;
+        if (keyList.indexOf(KeyEvent.VK_A) != -1){
+            horizontalVectorC -= Constants.runSpeed;
+ 
+            mainC.setDirection(left);
+            if(mainC.getState() == CharacterState.IDLE){
+                mainC.setState(CharacterState.RUN);
+            }
+        }
+        if (keyList.indexOf(KeyEvent.VK_D) != -1){
+            horizontalVectorC += Constants.runSpeed;
+            mainC.setDirection(right);
+            if(mainC.getState() == CharacterState.IDLE){
+                mainC.setState(CharacterState.RUN);
+            }
         }
     }
     //proportional control of the enemies movements to follow the main character
