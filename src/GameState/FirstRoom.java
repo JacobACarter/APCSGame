@@ -37,7 +37,7 @@ public class FirstRoom extends GameState{
             floors.add(new CollisionBox(150, 10, 515, 748));
             envirs.add(new CollisionBox(1920, 200, 0, 900));
             envirs.add(new CollisionBox(150, 200, 515, 748));
-           
+            sclbls.add(new CollisionBox(404, 618, 1340, 282));
         }
         catch(Exception e){
             e.printStackTrace();
