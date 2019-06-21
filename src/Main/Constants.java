@@ -9,4 +9,5 @@ public class Constants {
     public static final double jumpVelocity = -20;
     public static final double gravity = 1.2;
     public static final double runSpeed = 8;
+    public static final double climbSpeed = 6;
 }

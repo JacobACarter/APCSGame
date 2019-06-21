@@ -7,7 +7,7 @@ public class State {
     private static volatile State instance;
 
     public enum CharacterState {
-        RUN,IDLE,JUMP,HIT,HURT;
+        RUN,IDLE,JUMP,HIT,HURT,CLIMB;
     }
     private CharacterState state = CharacterState.IDLE;
 

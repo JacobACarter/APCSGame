@@ -22,6 +22,7 @@ public class FirstRoom extends GameState{
     private Character mainC;
     private ArrayList<CollisionBox> floors = new ArrayList<>();
     private ArrayList<CollisionBox> envirs = new ArrayList<>();
+    private ArrayList<CollisionBox> sclbls = new ArrayList<>();
     private int swordTimer;
     private final boolean left = false;
     private final boolean right = true;
@@ -84,7 +85,7 @@ public class FirstRoom extends GameState{
             gsm.setState(4);
         }
         
-        //fake gravity thing
+        //real gravity thing
         checkECollisions(mainC);
         
         //updates position according to key pressed
@@ -106,7 +107,7 @@ public class FirstRoom extends GameState{
                 mainC.setTouching(true);
             }
         }
-        if(!mainC.getTouching()){
+        if(!mainC.getTouching() && mainC.getState() != CharacterState.CLIMB){
             mainC.setState(CharacterState.JUMP);
             verticalVectorC += Constants.gravity;
         }
@@ -153,7 +154,15 @@ public class FirstRoom extends GameState{
     }
     
     
-
+    public boolean checkSCollisions(Character cha){
+        
+        cha.setTouching(false);
+        for (CollisionBox wall : sclbls){
+            if (cha.getHurt().checkCollision(wall))
+                return true; 
+        }
+        return false;
+    }
     
     @Override
     public void draw(Graphics2D g){
@@ -167,36 +176,92 @@ public class FirstRoom extends GameState{
     @Override
     //an arraylist of keys is made so that multiple keys can be pressed at a time
     public void keyPressed(int k){
+        
         if (keyList.indexOf(k) == -1){
             keyList.add(k);
         }
-        //character
-        horizontalVectorC = 0;
-        if (keyList.indexOf(KeyEvent.VK_A) != -1){
-            horizontalVectorC -= Constants.runSpeed;
- 
-            mainC.setDirection(left);
-            if(mainC.getState() == CharacterState.IDLE){
-                mainC.setState(CharacterState.RUN);
-            }
-        }
-        if (keyList.indexOf(KeyEvent.VK_D) != -1){
-            horizontalVectorC += Constants.runSpeed;
-            mainC.setDirection(right);
-            if(mainC.getState() == CharacterState.IDLE){
-                mainC.setState(CharacterState.RUN);
-            }
-        }
-        if ((k == KeyEvent.VK_W)&& (mainC.getState() != CharacterState.JUMP)){           
-            verticalVectorC = Constants.jumpVelocity;
-        }
-        else if (k == KeyEvent.VK_SPACE && mainC.getState() != CharacterState.HURT && mainC.getState() != CharacterState.JUMP){
-            mainC.setState(CharacterState.HIT);
-            mainC.setHit(false);
-            swordTimer = 0;
-        }
         if (k == KeyEvent.VK_ESCAPE){
             System.exit(0);
+        }
+        //character
+        if (!checkSCollisions(mainC)){
+            horizontalVectorC = 0;
+            if (keyList.indexOf(KeyEvent.VK_A) != -1){
+                horizontalVectorC -= Constants.runSpeed;
+
+                mainC.setDirection(left);
+                if(mainC.getState() == CharacterState.IDLE){
+                    mainC.setState(CharacterState.RUN);
+                }
+            }
+            if (keyList.indexOf(KeyEvent.VK_D) != -1){
+                horizontalVectorC += Constants.runSpeed;
+                mainC.setDirection(right);
+                if(mainC.getState() == CharacterState.IDLE){
+                    mainC.setState(CharacterState.RUN);
+                }
+            }
+            if ((k == KeyEvent.VK_W)&& (mainC.getState() != CharacterState.JUMP)){           
+                verticalVectorC = Constants.jumpVelocity;
+            }
+            else if (k == KeyEvent.VK_SPACE && mainC.getState() != CharacterState.HURT && mainC.getState() != CharacterState.JUMP){
+                mainC.setState(CharacterState.HIT);
+                mainC.setHit(false);
+                swordTimer = 0;
+            }
+            
+        }
+        else{
+            horizontalVectorC = 0;
+            if (k == KeyEvent.VK_SPACE && mainC.getState() != CharacterState.CLIMB){
+                mainC.setState(CharacterState.CLIMB);
+            }
+            if (mainC.getState() == CharacterState.CLIMB){
+                verticalVectorC = 0;
+                if (keyList.indexOf(KeyEvent.VK_W) != -1){
+                    verticalVectorC = -Constants.climbSpeed;
+                }
+                if (keyList.indexOf(KeyEvent.VK_S) != -1){
+                    verticalVectorC = Constants.climbSpeed;
+                }
+                if (keyList.indexOf(KeyEvent.VK_D) != -1){
+                    horizontalVectorC = Constants.climbSpeed;
+                }
+                if (keyList.indexOf(KeyEvent.VK_A) != -1){
+                    horizontalVectorC = -Constants.climbSpeed;
+                }
+                if (keyList.indexOf(KeyEvent.VK_SPACE) != -1){
+                    mainC.setState(CharacterState.JUMP);
+                }
+               
+            }
+            else{
+                if (keyList.indexOf(KeyEvent.VK_A) != -1){
+                    horizontalVectorC -= Constants.runSpeed;
+
+                    mainC.setDirection(left);
+                    if(mainC.getState() == CharacterState.IDLE){
+                        mainC.setState(CharacterState.RUN);
+                    }
+                }
+                if (keyList.indexOf(KeyEvent.VK_D) != -1){
+                    horizontalVectorC += Constants.runSpeed;
+                    mainC.setDirection(right);
+                    if(mainC.getState() == CharacterState.IDLE){
+                        mainC.setState(CharacterState.RUN);
+                    }
+                }
+                if ((k == KeyEvent.VK_W)&& (mainC.getState() != CharacterState.JUMP)){           
+                    verticalVectorC = Constants.jumpVelocity;
+                }
+                else if (k == KeyEvent.VK_SPACE && mainC.getState() != CharacterState.HURT && mainC.getState() != CharacterState.JUMP){
+                    mainC.setState(CharacterState.HIT);
+                    mainC.setHit(false);
+                    swordTimer = 0;
+                }
+            }
+            
+                
         }
     }
     
