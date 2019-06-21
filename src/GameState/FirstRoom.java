@@ -21,7 +21,7 @@ public class FirstRoom extends GameState{
     double verticalVectorC = 0;
     private Character mainC;
     private ArrayList<CollisionBox> floors = new ArrayList<>();
-    private ArrayList<CollisionBox> walls = new ArrayList<>();
+    private ArrayList<CollisionBox> envirs = new ArrayList<>();
     private int swordTimer;
     private final boolean left = false;
     private final boolean right = true;
@@ -34,7 +34,8 @@ public class FirstRoom extends GameState{
             mainC = new Character(new MainCharacterInfo());
             floors.add(new CollisionBox(1920, 200, 0, 900));
             floors.add(new CollisionBox(150, 10, 515, 748));
-  
+            envirs.add(new CollisionBox(1920, 200, 0, 900));
+            envirs.add(new CollisionBox(150, 200, 515, 748));
            
         }
         catch(Exception e){
@@ -84,8 +85,8 @@ public class FirstRoom extends GameState{
         }
         
         //fake gravity thing
-        updateGravity(mainC);
-        System.out.println(verticalVectorC);
+        checkECollisions(mainC);
+        
         //updates position according to key pressed
         mainC.setVector(horizontalVectorC, verticalVectorC);
 
@@ -94,24 +95,6 @@ public class FirstRoom extends GameState{
     }
     
     public void updateGravity(Character cha){
-//        mainC.setTouching(false);
-//        for(CollisionBox floor : floors){
-//            if(mainC.getHurt().checkCollision(floor)){
-//                if(mainC.getState() == CharacterState.JUMP){
-//                    mainC.setState(CharacterState.IDLE);
-//                }
-//                mainC.setPosition(mainC.getXPos(), floor.getYPos()-mainC.getHurt().getHeight());
-//                mainC.setVector(horizontalVectorC, 0);
-//                verticalVectorC = 0;
-//                mainC.setTouching(true);
-//            }
-//        }
-//        if(!mainC.getTouching()){
-//            verticalVectorC += Constants.gravity;
-//            mainC.setState(CharacterState.JUMP);
-//        }
-//        System.out.println(mainC.getState());
-  
         mainC.setTouching(false);
         for(CollisionBox floor: floors){
             if(mainC.getHurt().checkFloor(floor)){
@@ -125,6 +108,50 @@ public class FirstRoom extends GameState{
         }
         if(!mainC.getTouching()){
             mainC.setState(CharacterState.JUMP);
+            verticalVectorC += Constants.gravity;
+        }
+    }
+    
+    public void checkECollisions(Character cha){
+        
+        cha.setTouching(false);
+        for(CollisionBox envir : envirs){
+            switch(mainC.getHurt().checkECollisions(envir)){
+                case 1:
+                    mainC.setPosition(cha.getXPos(), envir.getYPos() - cha.getHurt().getHeight());
+                    if(cha.getState() ==  CharacterState.JUMP){
+                        verticalVectorC = 0;
+                        cha.setState(CharacterState.IDLE);
+                    }
+                    cha.setTouching(true);
+                    System.out.println(1);
+                    break;
+                case 2:
+                    cha.setPosition(envir.getXPos()-cha.getHurt().getWidth(), cha.getYPos());
+                    if(cha.getState() == CharacterState.RUN){
+                        if(horizontalVectorC >0){
+                            horizontalVectorC = 0;
+                            System.out.println("test");
+                        }
+                        cha.setState(CharacterState.IDLE);
+                    }
+                    System.out.println(2);
+                    break;
+                case 3:
+                    cha.setPosition(envir.getXPos()+envir.getWidth(), cha.getYPos());
+                    if(cha.getState() == CharacterState.RUN){
+                        if(horizontalVectorC < 0){
+                            horizontalVectorC = 0;
+                        }
+                        cha.setState(CharacterState.IDLE);
+                    }
+                    System.out.println(3);
+                    break;
+            }
+        }
+        if(!cha.getTouching()){
+            System.out.println(0);
+            cha.setState(CharacterState.JUMP);
             verticalVectorC += Constants.gravity;
         }
     }

@@ -12,6 +12,8 @@ public class CollisionBox {
     double height;
     double xPos;
     double yPos;
+    double pXPos;
+    double pYPos;
     
     public CollisionBox(double width, double height, double xPos, double yPos){
         this.width = width;
@@ -29,11 +31,15 @@ public class CollisionBox {
     }
     
     public void updatePos(double dx, double dy){
+        pXPos = xPos;
+        pYPos = yPos;
         xPos += dx;
         yPos += dy;
     }
     
     public void setPos(double x, double y){
+        pXPos = x;
+        pYPos = y;
         xPos = x;
         yPos = y;
     }
@@ -46,6 +52,13 @@ public class CollisionBox {
         return yPos;
     }
     
+    public double getPXPos(){
+        return pXPos;
+    }
+    
+    public double getPYPos(){
+        return pYPos;
+    }
     
     public boolean checkCollision(CollisionBox check){
         if (check.getWidth()+check.getXPos() < xPos+width && check.getXPos() +check.getWidth()>xPos){
@@ -69,13 +82,25 @@ public class CollisionBox {
         }
         return false;
     }
-    
-    public boolean checkLeft(CollisionBox wall){
-        if((xPos>wall.getXPos() && xPos < wall.getXPos()+ wall.getWidth()) && xPos+width > wall.getXPos()){
-            
-            
-            
+    //returns 0 if not colliding with anything
+    //returns 1 if on a floor
+    //retruns 2 if colliding with wall from the left
+    //returns 3 fi colliding with wall from the right
+    public int checkECollisions(CollisionBox check){
+        if ((check.getWidth()+check.getXPos() <= xPos+width && check.getXPos() +check.getWidth()>=xPos) || (check.getXPos() <= xPos+width && check.getXPos() + check.getWidth() >= xPos)){
+            if((check.getYPos()<=yPos+height && check.getYPos()+height >= yPos+height) || (check.getYPos()+check.getHeight()>=yPos && check.getYPos() <= yPos)){
+                if(pYPos+height <= check.getYPos()){
+                    return 1;
+                }
+                else if(pXPos+width <= check.getXPos()){
+                    return 2;
+                }
+                else if (pXPos >= check.getXPos() + check.getWidth()){
+                    return 3;
+                }
+            }
         }
-        return true;
+            return 0;
+        
     }
 }
