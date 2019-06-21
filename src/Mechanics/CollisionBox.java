@@ -38,8 +38,8 @@ public class CollisionBox {
     }
     
     public void setPos(double x, double y){
-        pXPos = x;
-        pYPos = y;
+//        pXPos = x;
+//        pYPos = y;
         xPos = x;
         yPos = y;
     }

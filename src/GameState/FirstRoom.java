@@ -128,23 +128,19 @@ public class FirstRoom extends GameState{
                     break;
                 case 2:
                     cha.setPosition(envir.getXPos()-cha.getHurt().getWidth(), cha.getYPos());
-                    if(cha.getState() == CharacterState.RUN){
                         if(horizontalVectorC >0){
                             horizontalVectorC = 0;
-                            System.out.println("test");
                         }
                         cha.setState(CharacterState.IDLE);
-                    }
+                    
                     System.out.println(2);
                     break;
                 case 3:
                     cha.setPosition(envir.getXPos()+envir.getWidth(), cha.getYPos());
-                    if(cha.getState() == CharacterState.RUN){
-                        if(horizontalVectorC < 0){
-                            horizontalVectorC = 0;
-                        }
-                        cha.setState(CharacterState.IDLE);
+                    if(horizontalVectorC < 0){
+                        horizontalVectorC = 0;
                     }
+                    cha.setState(CharacterState.IDLE);
                     System.out.println(3);
                     break;
             }
